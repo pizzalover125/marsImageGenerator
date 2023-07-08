@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NASA Images</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.15/dist/tailwind.min.css" rel="stylesheet">
+    <link href='https://unpkg.com/css.gg@2.0.0/icons/css/zoom-in.css' rel='stylesheet'>
+    <link href='https://unpkg.com/css.gg@2.0.0/icons/css/zoom-out.css' rel='stylesheet'>
+    <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            font-family: 'Space Mono', monospace;
+            background-color: black;
+            color: white;
+        }
+
+        .container {
+            height: 90vh; 
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        img {
+            max-width: 100%;
+            max-height: 70%;
+            object-fit: contain;
+            border: 4px dotted white;
+        }
+
+    </style>
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js" integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
+</head>
+<body>
+    <div class="container">
+        <img id="marImg">
+    </div>
+    <h1 class="text-2xl top-0 left-0 absolute">Mars Image Generator</h1>
+    <div class="inline-flex absolute right-0 top-0">
+        <button onclick="getImage()" class="bg-blue-500 font-bold py-2 px-4 rounded">
+            New Image
+        </button>
+    </div>
+    <p class="absolute bottom-0 left-0 text-sm">Note: The images may be small and not clear.</p>
+    <script>
+        $(document).ready(function() {
+            function getImage() {
+                $.getJSON("https://api.nasa.gov/mars-photos/api/v1/rovers/curiosity/photos?sol=1000&api_key=DEMO_KEY", function (data) {
+                    const imageIndex = Math.floor(Math.random() * 857);
+                    const image = data.photos[imageIndex].img_src;
+                    
+                    const imgElement = $("#marImg");
+                    imgElement.attr('src', image);
+                });
+            }
+
+            $("button").on("click", function () {
+                getImage();
+                $("button").attr("disabled", "disabled");   
+                setTimeout(function() {
+                    $("button").removeAttr("disabled");
+                }, 100)
+            });
+
+            getImage();
+        });
+    </script>
+</body>
+</html>
